@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaturaSnt - Гомеопатические препараты</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        <!-- PWA-метаданные -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000"/>
+
+<!-- Для iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="/images/icon-192.png">
+
+<!-- Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker зарегистрирован'))
+        .catch(err => console.log('Ошибка:', err));
+    });
+  }
+</script>
+        /* Стили для формы обратной связи */
+        .feedback-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #formMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Кнопка вызова формы -->
+    <div class="feedback-btn" id="feedbackBtn">
+        <i class="fas fa-envelope"></i> Обратная связь
+    </div>
+
+    <!-- Модальное окно с формой -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Обратная связь</h2>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="name">Ваше имя*:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email*:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Телефон*:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn">Отправить</button>
+            </form>
+            <div id="formMessage"></div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">NaturaSnt</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Натуральные продукты для вашего здоровья</h1>
+            <div class="homeopathy-title">ГОМЕОПАТИЧЕСКИЕ ПРЕПАРАТЫ ИЗ ИНДИИ</div>
+            <p>Откройте для себя мир натуральных и экологически чистых продуктов</p>
+            <a href="catalog.html" class="btn">Перейти в каталог</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="feature">
+                <i class="fas fa-leaf"></i>
+                <h3>100% Натурально</h3>
+                <p>Все продукты изготовлены из натуральных ингредиентов без химических добавок</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-award"></i>
+                <h3>Высокое качество</h3>
+                <p>Мы гарантируем высочайшее качество всех наших продуктов</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-truck"></i>
+                <h3>Быстрая доставка</h3>
+                <p>Быстрая и надежная доставка по всей России</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2>Отзывы наших клиентов</h2>
+            <div class="testimonial">
+                <img src="images/man.avif" alt="Клиент">
+                <p>"Отличные продукты! Качество на высоте, буду заказывать еще."</p>
+                <h4>Иван Петров</h4>
+            </div>
+            <div class="testimonial">
+                <img src="images/woman.png" alt="Клиент">
+                <p>"Быстрая доставка, все продукты свежие и натуральные. Рекомендую!"</p>
+                <h4>Мария Иванова</h4>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>Email: info@naturasnt.ru</p>
+                <p>Телефон: +7 (123) 456-78-90</p>
+            </div>
+            <div class="footer-section">
+                <h3>Соцсети</h3>
+                <div class="social">
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 NaturaSnt. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // URL вашего веб-приложения Google Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoo3L8_8zfz3yqMYZ08hxDOxP7JB-oel_aWLAmLejHTc4-HdcdN7gjh14wP3rQ_S9j/exec';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('feedbackModal');
+            const btn = document.getElementById('feedbackBtn');
+            const span = document.getElementsByClassName('close')[0];
+            const form = document.getElementById('feedbackForm');
+            const messageDiv = document.getElementById('formMessage');
+
+            // Открытие модального окна
+            btn.onclick = function() {
+                modal.style.display = 'block';
+            }
+
+            // Закрытие модального окна
+            span.onclick = function() {
+                modal.style.display = 'none';
+                messageDiv.style.display = 'none';
+            }
+
+            // Закрытие при клике вне окна
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                    messageDiv.style.display = 'none';
+                }
+            }
+
+            // Обработка отправки формы
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Показываем статус отправки
+                showMessage('Отправка данных...', 'info');
+
+                // Собираем данные формы
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    message: document.getElementById('message').value
+                };
+
+                try {
+                    // Отправляем данные в Google Apps Script
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(formData),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showMessage('Сообщение успешно отправлено!', 'success');
+                        form.reset();
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            messageDiv.style.display = 'none';
+                        }, 2000);
+                    } else {
+                        throw new Error(result.error || 'Ошибка сервера');
+                    }
+                } catch (error) {
+                    showMessage('Ошибка: ' + error.message, 'error');
+                }
+            });
+
+            // Функция для отображения сообщений
+            function showMessage(text, type) {
+                messageDiv.textContent = text;
+                messageDiv.style.display = 'block';
+                messageDiv.style.backgroundColor = type === 'success' ? '#d4edda' : 
+                                                 type === 'error' ? '#f8d7da' : '#d1ecf1';
+                messageDiv.style.color = type === 'success' ? '#155724' : 
+                                        type === 'error' ? '#721c24' : '#0c5460';
+                messageDiv.style.padding = '10px';
+                messageDiv.style.borderRadius = '4px';
+                messageDiv.style.marginTop = '15px';
+            }
+        });
+    </script>
+</body>
+</html>
