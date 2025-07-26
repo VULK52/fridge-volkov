@@ -7,25 +7,18 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- PWA-метаданные -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000"/>
+    
+    <!-- Для iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="NaturaSnt">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
+    
     <style>
-        <!-- PWA-метаданные -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#000000"/>
-
-<!-- Для iOS -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="/images/icon-192.png">
-
-<!-- Service Worker -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('Service Worker зарегистрирован'))
-        .catch(err => console.log('Ошибка:', err));
-    });
-  }
-</script>
         /* Стили для формы обратной связи */
         .feedback-btn {
             position: fixed;
@@ -92,7 +85,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Обратная связь</h2>
-            <form id="feedbackForm">
+            <form id="feedbackForm" action="https://script.google.com/macros/s/AKfycbzoo3L8_8zfz3yqMYZ08hxDOxP7JB-oel_aWLAmLejHTc4-HdcdN7gjh14wP3rQ_S9j/exec" method="POST">
                 <div class="form-group">
                     <label for="name">Ваше имя*:</label>
                     <input type="text" id="name" name="name" required>
@@ -115,6 +108,7 @@
         </div>
     </div>
 
+    <!-- Остальное содержимое страницы -->
     <header>
         <div class="container">
             <div class="logo">
@@ -196,9 +190,16 @@
     </footer>
 
     <script>
-        // URL вашего веб-приложения Google Apps Script
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoo3L8_8zfz3yqMYZ08hxDOxP7JB-oel_aWLAmLejHTc4-HdcdN7gjh14wP3rQ_S9j/exec';
+        // Регистрация Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker зарегистрирован:', reg))
+                    .catch(err => console.log('Ошибка регистрации Service Worker:', err));
+            });
+        }
 
+        // Обработка формы обратной связи
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('feedbackModal');
             const btn = document.getElementById('feedbackBtn');
@@ -206,18 +207,15 @@
             const form = document.getElementById('feedbackForm');
             const messageDiv = document.getElementById('formMessage');
 
-            // Открытие модального окна
             btn.onclick = function() {
                 modal.style.display = 'block';
             }
 
-            // Закрытие модального окна
             span.onclick = function() {
                 modal.style.display = 'none';
                 messageDiv.style.display = 'none';
             }
 
-            // Закрытие при клике вне окна
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = 'none';
@@ -225,34 +223,21 @@
                 }
             }
 
-            // Обработка отправки формы
-            form.addEventListener('submit', async function(e) {
+            form.onsubmit = async function(e) {
                 e.preventDefault();
                 
-                // Показываем статус отправки
                 showMessage('Отправка данных...', 'info');
-
-                // Собираем данные формы
-                const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    message: document.getElementById('message').value
-                };
-
+                
                 try {
-                    // Отправляем данные в Google Apps Script
-                    const response = await fetch(SCRIPT_URL, {
+                    const formData = new FormData(form);
+                    const response = await fetch(form.action, {
                         method: 'POST',
-                        body: JSON.stringify(formData),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
+                        body: formData
                     });
                     
                     const result = await response.json();
                     
-                    if (result.success) {
+                    if (result.result === "success") {
                         showMessage('Сообщение успешно отправлено!', 'success');
                         form.reset();
                         setTimeout(() => {
@@ -265,9 +250,8 @@
                 } catch (error) {
                     showMessage('Ошибка: ' + error.message, 'error');
                 }
-            });
+            }
 
-            // Функция для отображения сообщений
             function showMessage(text, type) {
                 messageDiv.textContent = text;
                 messageDiv.style.display = 'block';
@@ -275,9 +259,6 @@
                                                  type === 'error' ? '#f8d7da' : '#d1ecf1';
                 messageDiv.style.color = type === 'success' ? '#155724' : 
                                         type === 'error' ? '#721c24' : '#0c5460';
-                messageDiv.style.padding = '10px';
-                messageDiv.style.borderRadius = '4px';
-                messageDiv.style.marginTop = '15px';
             }
         });
     </script>
